@@ -1,6 +1,7 @@
 package com.snakesandladders.service;
 
 import com.snakesandladders.model.Player;
+import com.snakesandladders.model.Snake;
 import com.snakesandladders.model.SnakeAndLadderBoard;
 
 import java.util.*;
@@ -13,13 +14,33 @@ public class SnakeAndLadderService {
     private static final int DEFAULT_NO_OF_DICES = 1;
     private static final int MAX_NO_OF_ROLLS = 10;
     private int noOfDices;
+    private boolean isCrookedDice;
 
     public SnakeAndLadderService(int boardSize) {
         this.snakeAndLadderBoard = new SnakeAndLadderBoard(boardSize);
+        addSnakesToTheBoard();
     }
 
     public SnakeAndLadderService() {
         this(SnakeAndLadderService.DEFAULT_BOARD_SIZE);
+        addSnakesToTheBoard();
+    }
+
+    public void addSnakesToTheBoard(){
+        List<Snake> snakes = new ArrayList<Snake>();
+        Snake snake = new Snake(27,5);
+        Snake snake1 = new Snake(40,3);
+        Snake snake2 = new Snake(43,18);
+        Snake snake3 = new Snake(66,45);
+        Snake snake4 = new Snake(76,58);
+        Snake snake5 = new Snake(91,53);
+        snakes.add(snake);
+        snakes.add(snake1);
+        snakes.add(snake2);
+        snakes.add(snake3);
+        snakes.add(snake4);
+        snakes.add(snake5);
+        this.snakeAndLadderBoard.setSnakes(snakes);
     }
 
 
@@ -34,6 +55,13 @@ public class SnakeAndLadderService {
         this.noOfDices = noOfDices;
     }
 
+    public void setSnakes(List<Snake> snakes) {
+        snakeAndLadderBoard.setSnakes(snakes); // Add snakes to board
+    }
+
+    public void setCrookedDice(boolean crookedDice) {
+        isCrookedDice = crookedDice;
+    }
 
     private void movePlayer(Player player, int positions) {
         int oldPosition = snakeAndLadderBoard.getPlayerPieces().get(player.getId());
@@ -42,6 +70,8 @@ public class SnakeAndLadderService {
         int boardSize = snakeAndLadderBoard.getSize();
         if (newPosition > boardSize) {
             newPosition = oldPosition;
+        }else {
+            newPosition = getNewPositionAfterGoingThroughSnakes(newPosition);
         }
 
         snakeAndLadderBoard.getPlayerPieces().put(player.getId(), newPosition);
@@ -49,11 +79,17 @@ public class SnakeAndLadderService {
         System.out.println(player.getName() + " rolled a " + positions + " and moved from " + oldPosition +" to " + newPosition);
     }
 
-    private int getTotalValueAfterDiceRolls(int noOfDices) {
+    private int getTotalValueAfterDiceRolls() {
         int value =0;
-        for(int i =1;i<=noOfDices;i++){
-            value = value + DiceService.roll();
-        }
+
+            for (int i = 1; i <= this.noOfDices; i++) {
+                value = value + DiceService.roll();
+            }
+
+            if(this.isCrookedDice && value%2!=0){
+                value = getTotalValueAfterDiceRolls();
+            }
+
         return value;
     }
 
@@ -70,7 +106,7 @@ public class SnakeAndLadderService {
             System.out.println("==========================");
             System.out.println("Press any key and press enter to roll Dice");
             String key = in.next();
-            int totalDiceValue = getTotalValueAfterDiceRolls(noOfDices);
+            int totalDiceValue = getTotalValueAfterDiceRolls();
             Player currentPlayer = player;
             movePlayer(currentPlayer, totalDiceValue);
             if (hasPlayerWon(currentPlayer)) {
@@ -81,5 +117,21 @@ public class SnakeAndLadderService {
             noOfRolls++;
         }
         System.out.println("Max chances are finished, Start Game and Play again");
+    }
+
+    private int getNewPositionAfterGoingThroughSnakes(int newPosition) {
+        int previousPosition;
+
+        do {
+            previousPosition = newPosition;
+            for (Snake snake : snakeAndLadderBoard.getSnakes()) {
+                if (snake.getStart() == newPosition) {
+                    newPosition = snake.getEnd();
+                    System.out.println("Ohhhh!!!  Your piece is eaten by Snake");
+                }
+            }
+
+        } while (newPosition != previousPosition);
+        return newPosition;
     }
 }
