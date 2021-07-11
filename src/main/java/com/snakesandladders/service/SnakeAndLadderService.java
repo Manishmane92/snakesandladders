@@ -43,6 +43,10 @@ public class SnakeAndLadderService {
         this.snakeAndLadderBoard.setSnakes(snakes);
     }
 
+    public SnakeAndLadderBoard getSnakeAndLadderBoard(){
+        return this.snakeAndLadderBoard;
+    }
+
 
     public void setPlayer(Player player) {
         this.player = player;
@@ -63,7 +67,7 @@ public class SnakeAndLadderService {
         isCrookedDice = crookedDice;
     }
 
-    private void movePlayer(Player player, int positions) {
+    public void movePlayer(Player player, int positions) {
         int oldPosition = snakeAndLadderBoard.getPlayerPieces().get(player.getId());
         int newPosition = oldPosition + positions;
 
@@ -79,7 +83,7 @@ public class SnakeAndLadderService {
         System.out.println(player.getName() + " rolled a " + positions + " and moved from " + oldPosition +" to " + newPosition);
     }
 
-    private int getTotalValueAfterDiceRolls() {
+    public int getTotalValueAfterDiceRolls() {
         int value =0;
 
             for (int i = 1; i <= this.noOfDices; i++) {
@@ -111,7 +115,6 @@ public class SnakeAndLadderService {
             movePlayer(currentPlayer, totalDiceValue);
             if (hasPlayerWon(currentPlayer)) {
                 System.out.println(currentPlayer.getName() + " wins the game");
-                //snakeAndLadderBoard.getPlayerPieces().remove(currentPlayer.getId());
                 return;
             }
             noOfRolls++;
@@ -130,7 +133,6 @@ public class SnakeAndLadderService {
                     System.out.println("Ohhhh!!!  Your piece is eaten by Snake");
                 }
             }
-
         } while (newPosition != previousPosition);
         return newPosition;
     }
