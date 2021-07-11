@@ -1,4 +1,4 @@
-# Airline Management System
+# Snakes and Ladder's game
 
 
 ## Getting Started
@@ -14,14 +14,10 @@ go to project root folder
 
 #### Run
 go to (cd to) target folder
-- Run ``` java -jar airlinemanagement-1.0.jar```
-- input file is present in src/main/resources folder (airline-routes.dat)
-- You can change input in the file before you build it.
+- Run ``` java -jar snakeandladders-1.0.jar```
+- System in is used for inputs
+- Input values as per given instructions
 - System out is used for the output.
-
-###FILE INPUT FORMAT
-- Input file is places in src/main/resources/airline-routes.dat
-- Use this file to add/update input.
    
 #####UNIT TESTING :
 
