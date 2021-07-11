@@ -14,7 +14,7 @@ go to project root folder
 
 #### Run
 go to (cd to) target folder
-- Run ``` java -jar snakeandladders-1.0.jar```
+- Run ``` java -jar snakesandladders-1.0.jar```
 - System in is used for inputs
 - Input values as per given instructions
 - System out is used for the output.
